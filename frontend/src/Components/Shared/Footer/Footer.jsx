@@ -2,8 +2,8 @@
 const Footer = () => {
     return (
         <div>
-       <footer className="footer sm:footer-horizontal flex  md:justify-evenly bg-base-300 text-base-content p-10">
-  <nav>
+       <footer className="footer sm:footer-horizontal flex md:justify-evenly bg-base-300 text-base-content p-10">
+  <nav className="font-inter">
     <h2 className="text-xl">Contact us</h2>
     <p>
         123 ABS Street, Uni 21, Bangladesh <br />
