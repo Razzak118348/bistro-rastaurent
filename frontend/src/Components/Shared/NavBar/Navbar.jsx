@@ -1,76 +1,189 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import useTheme from '../../../hooks/useTheme';
-import { FaMoon, FaSun } from "react-icons/fa"; // ✅ ADDED
+import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiMenu, HiX } from "react-icons/hi";
+import { FaMoon, FaSun, FaShoppingCart } from "react-icons/fa";
+import useTheme from "../../../hooks/useTheme";
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
+  // demo user
+  const user = { name: "John Doe", photoURL: "" };
+  const LogOut = () => console.log("Logged out");
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setMenuOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  /* ================= NAV ITEMS ================= */
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Our Menu", path: "/menu" },
+    { name: "Our Shop", path: "/shop" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Contact Us", path: "/contact" },
+  ];
+
   return (
-    <div className="navbar font-inter shadow-sm">
-      <div className="flex-1">
-        <Link to={'/'} className="text-xl hover font-cinzel">
-          Bistro Restaurent
+    <nav className="fixed top-0 left-0 w-full font-inter z-50">
+      <div className="container mx-auto px-4 flex items-center justify-between h-16">
+
+        {/* ================= LOGO ================= */}
+        <Link className="text-xl font-bold text-yellow-400 font-cinzel" to="/">
+          Bistro Restaurant
         </Link>
-      </div>
 
-      <div className="flex-none">
+        {/* ================= DESKTOP MENU ================= */}
+        <div className="hidden md:flex items-center gap-6">
 
-        {/* 🌗 DARK / LIGHT BUTTON — ADDED */}
-        <button
-          onClick={toggleTheme}
-          className="btn btn-ghost btn-circle mx-2"
-          aria-label="Toggle theme"
-        >
-          {theme === "dark" ? (
-            <FaSun className="h-5 w-5" />
-          ) : (
-            <FaMoon className="h-5 w-5" />
-          )}
-        </button>
+          {/* Links */}
+          {navLinks.map((link, i) => (
+            <NavLink
+              key={i}
+              to={link.path}
+              className={({ isActive }) =>
+                `hover:text-yellow-400 transition ${
+                  isActive ? "text-yellow-400" : ""
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
 
-        {/* Cart */}
-        <div className="dropdown dropdown-end mx-2">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-            <div className="indicator">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <span className="badge badge-sm indicator-item">8</span>
-            </div>
-          </div>
+          {/* Theme */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            {theme === "dark" ? <FaSun /> : <FaMoon />}
+          </button>
 
-          <div tabIndex={0} className="card card-compact dropdown-content z-1 mt-3 w-52 shadow dark:bg-gray-700">
-            <div className="card-body">
-              <span className="text-lg font-bold">8 Items</span>
-              <span className="text-info">Subtotal: $999</span>
-              <div className="card-actions">
-                <button className="btn btn-primary btn-block">View cart</button>
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* Cart */}
+          <Link to={"/cart"} className="relative cursor-pointer">
+            <FaShoppingCart size={18} />
+            <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs px-1 rounded-full">
+              8
+            </span>
+          </Link>
 
-        {/* Avatar */}
-        <div className="dropdown dropdown-end ">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-            <div className="w-10 rounded-full">
+          {/* ================= PROFILE ================= */}
+          {user && (
+            <div className="relative">
               <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                onClick={() => setProfileOpen(!profileOpen)}
+                src={
+                  user.photoURL ||
+                  "https://cdn-icons-png.flaticon.com/512/219/219986.png"
+                }
+                alt="user"
+                className="w-9 h-9 rounded-full border-2 border-green-600 cursor-pointer"
               />
-            </div>
-          </div>
 
-          <ul tabIndex="-1" className="menu menu-sm dropdown-content rounded-box z-1 mt-3 w-52 p-2 shadow dark:bg-gray-700 ">
-            <li><a className="justify-between">Profile</a></li>
-            <li><a>Logout</a></li>
-          </ul>
+              <AnimatePresence>
+                {profileOpen  && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-3 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-xl border"
+                  >
+                    <div className="px-4 py-3 border-b dark:border-gray-700">
+                      <p className="text-sm font-semibold text-center">
+                        {user.name}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={LogOut}
+                      className="w-full p-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </div>
 
+        {/* ================= MOBILE BUTTONS ================= */}
+        <div className="md:hidden flex items-center gap-3">
+          <button onClick={toggleTheme}>
+            {theme === "dark" ? <FaSun /> : <FaMoon />}
+          </button>
+
+          <button onClick={() => setMenuOpen(!menuOpen)} className="text-2xl">
+            {menuOpen ? <HiX /> : <HiMenu />}
+          </button>
+        </div>
       </div>
-    </div>
+
+      {/* ================= MOBILE MENU ================= */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-white dark:bg-gray-900 shadow-lg"
+          >
+            <ul className="flex flex-col px-6 py-5 gap-5">
+
+              {navLinks.map((link, i) => (
+                <NavLink
+                  key={i}
+                  to={link.path}
+                  onClick={() => setMenuOpen(false)}
+                  className=""
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+
+              {/* Cart */}
+              <div className="">
+              <Link to={"/cart"} className="flex items-center gap-2">  <FaShoppingCart /> Cart (8)</Link>
+              </div>
+
+              {/* Profile Card */}
+              {user && (
+                <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 rounded-xl p-3 mt-2">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={
+                        user.photoURL ||
+                        "https://cdn-icons-png.flaticon.com/512/219/219986.png"
+                      }
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <span>{user.name}</span>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      LogOut();
+                      setMenuOpen(false);
+                    }}
+                    className="text-red-500 text-sm"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };
 
