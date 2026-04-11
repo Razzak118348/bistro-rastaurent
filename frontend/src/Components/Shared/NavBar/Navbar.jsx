@@ -32,7 +32,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 w-full font-inter z-50">
+    <nav className="fixed top-0 left-0 w-full font-inter z-50 bg-[#242323] text-white">
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
 
         {/* ================= LOGO ================= */}
@@ -137,13 +137,16 @@ const Navbar = () => {
             className="md:hidden bg-white dark:bg-gray-900 shadow-lg"
           >
             <ul className="flex flex-col px-6 py-5 gap-5">
-
               {navLinks.map((link, i) => (
                 <NavLink
                   key={i}
                   to={link.path}
                   onClick={() => setMenuOpen(false)}
-                  className=""
+                  className={({ isActive }) =>
+                    `text-gray-800 dark:text-white hover:text-yellow-500 transition ${
+                      isActive ? "text-yellow-500 dark:text-yellow-500" : ""
+                    }`
+                  }
                 >
                   {link.name}
                 </NavLink>
@@ -151,7 +154,13 @@ const Navbar = () => {
 
               {/* Cart */}
               <div className="">
-              <Link to={"/cart"} className="flex items-center gap-2">  <FaShoppingCart /> Cart (8)</Link>
+                <Link
+                  to={"/cart"}
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 text-gray-800 dark:text-white hover:text-yellow-500 transition"
+                >
+                  <FaShoppingCart /> Cart (8)
+                </Link>
               </div>
 
               {/* Profile Card */}
@@ -164,8 +173,9 @@ const Navbar = () => {
                         "https://cdn-icons-png.flaticon.com/512/219/219986.png"
                       }
                       className="w-10 h-10 rounded-full"
+                      alt="user avatar"
                     />
-                    <span>{user.name}</span>
+                    <span className="text-gray-800 dark:text-white">{user.name}</span>
                   </div>
 
                   <button

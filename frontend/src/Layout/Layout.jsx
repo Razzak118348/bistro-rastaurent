@@ -18,10 +18,10 @@ const Layout = () => {
 
       <main
         className="
-          pt-20 lg:pt-16 mx-auto
+          pt-16 lg:pt-16 mx-auto
           w-full
           min-h-[calc(100vh-240px)]
-          px-4 sm:px-6 md:px-8 lg:px-10
+
           2xl:max-w-screen-2xl
           3xl:max-w-[1650px]
         "
