@@ -35,9 +35,10 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full font-inter z-50 bg-[#242323] text-white">
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
 
-        {/* ================= LOGO ================= */}
-        <Link className="text-xl font-bold text-yellow-400 font-cinzel" to="/">
-          Bistro Restaurant
+        {/* Logo */}
+        <Link className="text-xl font-bold  text-yellow-400 font-cinzel" to="/">
+<span>Food Lovers BD</span>
+
         </Link>
 
         {/* ================= DESKTOP MENU ================= */}
